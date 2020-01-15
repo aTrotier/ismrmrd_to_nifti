@@ -29,7 +29,8 @@ h.NiftiName=hdr.measurementInformation.protocolName;
 h.InPlanePhaseEncodingDirection='COL'; %or 'ROW'
 
 pf.lefthand = 0;
-%% Only issue for this dataset -> I need to obtain
+%% Only issue for this dataset -> I need to obtain : 
+%[-103.38414726195 -165.86384794472 114.56585456728]
 
 corner(1)=head.position(1) - ...
     (hdr.encoding.reconSpace.fieldOfView_mm.x / 2.0 ) * head.read_dir(1) - ...
@@ -47,6 +48,18 @@ corner(3)=head.position(3) - ...
     (hdr.encoding.reconSpace.fieldOfView_mm.z / 2.0 ) * head.slice_dir(3);
 
 h.ImagePositionPatient = corner';
-h.ImagePositionPatient
 
+
+epsi = 10^-2;
+ImagePosition = [-103.38414726195 -165.86384794472 114.56585456728];
+if ((h.ImagePositionPatient(1) - ImagePosition(1)) > epsi  || ...
+    (h.ImagePositionPatient(2) - ImagePosition(2)) > epsi || ...
+    (h.ImagePositionPatient(3) - ImagePosition(3)) > epsi)
+
+warning(['Image position calculated from ISMRMRD is different'])
+warning(['What we need : ' num2str(ImagePosition)])
+warning(['What we calculate : ' num2str(h.ImagePositionPatient')])
+else
+    disp('Image position patient is the same')
+end
 
