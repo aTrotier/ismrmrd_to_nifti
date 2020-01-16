@@ -1,5 +1,6 @@
 % export in ismrmrd
-filename='/media/sylvain/rawData/Project-data/SIEMENS/MP2RAGE/data_santain/CS_MP2RAGE/meas_MID00221_FID97927_sparse_mp2rage_0p8iso_acc8p5.dat';
+%filename='/media/sylvain/rawData/Project-data/SIEMENS/MP2RAGE/data_santain/CS_MP2RAGE/meas_MID00221_FID97927_sparse_mp2rage_0p8iso_acc8p5.dat';
+filename='/media/sylvain/rawData/Project-data/SIEMENS/MP2RAGE/data_santain/CS_MP2RAGE/meas_MID00222_FID97928_sparse_mp2rage_1p0iso_acc8p0.dat';
 [pathstr, name, ext] = fileparts(filename);
 
 cmdStr=['siemens_to_ismrmrd -z 3 -f ' filename ' -o ' pathstr '/' name '.h5']
@@ -87,51 +88,67 @@ else
 end
 meas  = D.select(firstScan:D.getNumber);
 
-clear D dset
+%clear D
 %% Reconstruct images
 % Since the entire file is in memory we can use random access
 % Loop over repetitions, contrasts, slices
-
-nContrasts=1;
-
 reconImages = {};
 nimages = 0;
 for rep = 1:nReps
-    for contrast = 1:nContrasts
+    for nset = 1:set
         for slice = 1:nSlices
             % Initialize the K-space storage array
-            K = single(zeros(enc_Nx, enc_Ny, enc_Nz, 1));
+            K = zeros(enc_Nx, enc_Ny, enc_Nz, nCoils);
             % Select the appropriate measurements from the data
-            acqs = find(  (meas.head.idx.contrast==(contrast-1)) ...
-                & (meas.head.idx.repetition==(rep-1)) ...
-                & (meas.head.idx.set==(set)) ...
-                & (meas.head.idx.slice==(slice-1)));
+            acqs = find(  (meas.head.idx.set==(nset-1)) ...
+                        & (meas.head.idx.repetition==(rep-1)) ...
+                        & (meas.head.idx.slice==(slice-1)) ...
+                        & (~ meas.head.flagIsSet('ACQ_IS_NAVIGATION_DATA')) ...
+                        & (~ meas.head.flagIsSet('ACQ_IS_PHASECORR_DATA')) ...
+                        & (~ meas.head.flagIsSet('ACQ_IS_PARALLEL_CALIBRATION')) ...
+                        & (~ meas.head.flagIsSet('ACQ_IS_NOISE_MEASUREMENT')) ...
+                        & (~ meas.head.flagIsSet('ACQ_IS_DUMMYSCAN_DATA')) ...
+                        & (~ meas.head.flagIsSet('ACQ_IS_RTFEEDBACK_DATA')) ...
+                        & (~ meas.head.flagIsSet('ACQ_IS_HPFEEDBACK_DATA')) ...
+                        );
             for p = 1:length(acqs)
                 ky = meas.head.idx.kspace_encode_step_1(acqs(p)) + 1;
                 kz = meas.head.idx.kspace_encode_step_2(acqs(p)) + 1;
-                %K(:,ky,kz,:) = single(meas.data{acqs(p)});
-                K(:,ky,kz,:) = single(meas.data{acqs(p)}(:,:,:,1));
+                K(:,ky,kz,:) = meas.data{acqs(p)};
             end
             % Reconstruct in x
             K = fftshift(ifft(fftshift(K,1),[],1),1);
             % Chop if needed
             if (enc_Nx == rec_Nx)
-                kspace = K;
+                im = K;
             else
                 ind1 = floor((enc_Nx - rec_Nx)/2)+1;
                 ind2 = floor((enc_Nx - rec_Nx)/2)+rec_Nx;
-                kspace = K(ind1:ind2,:,:,:);
+                im = K(ind1:ind2,:,:,:);
             end
-            clear K meas
-            % go back to kspace in x
-            kspace = fftshift(fft(fftshift(kspace,1),[],1),1);
+            % Reconstruct in y then z
+            im = fftshift(ifft(fftshift(im,2),[],2),2);
+            if size(im,3)>1
+                im = fftshift(ifft(fftshift(im,3),[],3),3);
+            end
             
+            % Combine SOS across coils
+            im = sqrt(sum(abs(im).^2,4));
             
+            % Append
+            nimages = nimages + 1;
+            reconImages{nimages} = im;
         end
     end
 end
 
-img  = fftshift(fft(fftshift(kspace,[1 2 3]),[],[1 2 3]),[1 2 3]);
+% Display the first image
+figure
+colormap gray
+subplot(2,1,1);
+imagesc(reconImages{1}(:,:,end/2)); axis image; axis off; colorbar;
+subplot(2,1,2);
+imagesc(reconImages{2}(:,:,end/2)); axis image; axis off; colorbar;
 %%
 head.read_dir(:,1)
 head.phase_dir(:,1)
@@ -208,8 +225,7 @@ h.InPlanePhaseEncodingDirection='COL'; %or 'ROW'
 pf.lefthand = 0;
 
 %%
-%img = zeros(hdr.encoding.reconSpace.matrixSize.x,hdr.encoding.reconSpace.matrixSize.y,hdr.encoding.reconSpace.matrixSize.z);
-img = flip(flip(T1mapCS,2),3);
+img=reconImages{1};
 img = permute(img, [2 1 3]);
 nii = nii_tool('init', img); % create nii struct based on img
 
