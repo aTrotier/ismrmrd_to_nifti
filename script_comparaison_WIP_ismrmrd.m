@@ -1,4 +1,7 @@
-% export in ismrmrd
+%% Export of MP2RAGE-CS_WIP siemens from : dat -> ismrmrd -> nifti 
+% information about the acquistion -> set are used to store TI1 and TI2
+% acquistion
+
 %filename='/media/sylvain/rawData/Project-data/SIEMENS/MP2RAGE/data_santain/CS_MP2RAGE/meas_MID00221_FID97927_sparse_mp2rage_0p8iso_acc8p5.dat';
 filename='/media/sylvain/rawData/Project-data/SIEMENS/MP2RAGE/data_santain/CS_MP2RAGE/meas_MID00222_FID97928_sparse_mp2rage_1p0iso_acc8p0.dat';
 [pathstr, name, ext] = fileparts(filename);
@@ -95,7 +98,7 @@ meas  = D.select(firstScan:D.getNumber);
 reconImages = {};
 nimages = 0;
 for rep = 1:nReps
-    for nset = 1:set
+    for nset = 1:set %store TI1 and TI2 acquisition
         for slice = 1:nSlices
             % Initialize the K-space storage array
             K = zeros(enc_Nx, enc_Ny, enc_Nz, nCoils);
