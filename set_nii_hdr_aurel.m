@@ -355,7 +355,7 @@ if s.Columns>dim(1) && ~strncmpi(s.Manufacturer, 'UIH', 3) % Siemens mosaic
 elseif isfield(s, 'LastFile') && isfield(s.LastFile, 'ImagePositionPatient')
     R(:, 3) = (s.LastFile.ImagePositionPatient - R(:,4)) / (dim(3)-1);
     thk = norm(R(:,3)); % override slice thickness if it is off
-    if abs(pixdim(3)-thk)/thk > 0.01, pixdim(3) = thk; end
+    if abs(pixdim(3)-thk)/thk > 0.01, pixdim(3) = thk; warning('slice thikness does not correspond to R'); end
     return; % almost all non-mosaic images return from here
 end
 
