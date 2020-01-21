@@ -119,6 +119,7 @@ nii = nii_tool('init', img); % create nii struct based on img
 h2{1}=h;
 [nii] = set_nii_hdr_aurel(nii, h2, pf);
 
+nii.hdr.descrip=hdr.measurementInformation.measurementID;
 
 fmt = 1;
 rst3D = (isnumeric(fmt) && fmt>3) || (ischar(fmt) && ~isempty(regexpi(fmt, '3D')));
