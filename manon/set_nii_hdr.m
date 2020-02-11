@@ -1,4 +1,4 @@
-function [nii, h] = set_nii_hdr_manon(nii, h, pf)
+function [nii, h] = set_nii_hdr(nii, h, pf)
 dim = nii.hdr.dim(2:4); nVol = nii.hdr.dim(5);
 fld = 'NumberOfTemporalPositions';
 if ~isfield(h{1}, fld) && nVol>1, h{1}.(fld) = nVol; end
@@ -125,7 +125,7 @@ rotM(1:3, 4) = (dim).* flp; % 0 or dim (initially it was (dim -1) :
 R = R / rotM; % xform matrix after flip
 
 
-R(:,4)=R(:,4)+R(:,1:3)*shift_vector' %This line adjusts values in terms of
+R(:,4)=R(:,4)+R(:,1:3)*shift_vector'; %This line adjusts values in terms of
 %offsets in x,y and z direction. I saw on 
 %many documentations and forums that it's normal to substract [1 1
 %0.5]*dimpix 

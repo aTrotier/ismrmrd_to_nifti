@@ -1,4 +1,4 @@
-function [head, hdr, img_scaled] = load_ismrmrd(filename)
+function [head, hdr, img_scaled] = load_ismrmrd_ifft3d_reconstruction(filename)
 %LOAD_ISMRMD :  load .h5 file, read header (head) and reconstruct images
 
 
