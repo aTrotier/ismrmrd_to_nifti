@@ -13,7 +13,7 @@ This part is a bit more dark and real explanations are missing, so if you know w
 
 
 
-Thoses changes have been tested on SIEMENS AREA system, with Sagittal, Coronal and Transversal views, for all read directions and rotations (positives and negatives but not for all cases).
+Thoses changes have been tested on SIEMENS AREA system, with Sagittal, Coronal and Transversal views, for all read directions and rotations (positives and negatives but not for all cases) in HFS.
 
 If you need our dataset to test the code, tell us !
 
@@ -23,15 +23,16 @@ If you need our dataset to test the code, tell us !
 This beta version is available in the "manon" folder.
 Her you will find :
 
-- *"main_manon.m"* : main code to **run conversion** from ".dat"/".h5" to Nifti ".nii"
-- *"load_ismrmrd.m"* : function to load ".h5" file and reconstruct images
-- *"create_nifti_parameters.m"* : function to compute and stock parameters from ismrmrd format needed by *"set_nii_hdr_manon.m"*
-- *"set_nii_hdr_manon.m"* : function to compute and create nifti structure from computed parameters in *"create_nifti_parameters.m" *
-- *"comparison_test_manon.m"* : main code to **compare two nifti files** (usefull to compare true and converted nifti files)
+- *"main_conversion.m"* : main code to **run conversion** from ".dat"/".h5" to Nifti ".nii"
+- *"load_ismrmrd_ifft3d_reconstruction.m"* : function to load ".h5" file and reconstruct images
+- *"extract_ismrmrd_parameters_from_headers.m"* : function to compute and stock parameters from ismrmrd format needed by *"set_nii_hdr.m"*
+- *"set_nii_hdr.m"* : function to compute and create nifti structure from computed parameters in *"extract_ismrmrd_parameters_from_headers.m" *
+- *"flip_image.m"* : function to flip the reconstructed image and fit with the true Nifti one.
+- *"comparison_test.m"* : main code to **compare two nifti files** (usefull to compare true and converted nifti files)
 
 
 ### To convert data : 
-1) Open **"main_manon.m"** :
+1) Open **"main_conversion.m"** :
 
 1) In "%% Add path to needed librairies", change paths for your computer
 
@@ -50,14 +51,14 @@ addpath('/home/path_to_ismrmrd_to_nifti/manon')
 
 3) Change the last line of the code to save in a different name or path 
 ```matlab
-nii_tool('save', nii2, [pathstr '/' name '_manon_modified_version.nii'], rst3D);
+nii_tool('save', nii2, [pathstr '/' name '_ismrmrd_to_nifti_version.nii'], rst3D);
 ```
 if you want"
 
 4) Run the code
 
 ### To compare real Nifti format and the converted one : 
-1) Open **"comparison_test_manon.m"**
+1) Open **"comparison_test.m"**
 1) Set the *true_filename* to the true Nifti dataset
 2) Set the *converted_filename* to the converted Nifti dataset
 3) Run and compare

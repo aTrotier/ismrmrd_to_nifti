@@ -1,4 +1,4 @@
-function h = create_nifti_parameters(head, hdr, table_position_offset)
+function h = extract_ismrmrd_parameters_from_headers(head, hdr, table_position_offset)
 %create_nifti_parameters : function that returns a structure h which
 %contains parameters needed for conversion function
 

@@ -63,34 +63,13 @@ clearvars
 [pathstr, name, ext] = fileparts(filename);
 %load .h5 file and return dataset header, ismrmrd header and reconstructed
 %images
-[head, hdr, img_scaled] = load_ismrmrd(filename);
-
-
-
-
-%% Display the first image (mid slice) : uncomment to display
-% center=size(img_scaled{1})/2
-% close all
-% figure
-% colormap gray
-% subplot(3,1,1);
-% imagesc(reconImages{1}(:,:,center(3))); axis image; axis off; colorbar;
-% subplot(3,1,2);
-% imagesc(squeeze(reconImages{1}(:,center(2),:))); axis image; axis off; colorbar;
-% subplot(3,1,3);
-% imagesc(squeeze(reconImages{1}(center(1),:,:))); axis image; axis off; colorbar;
-% subplot(2,1,2);
-% imagesc(reconImages{2}(:,:,end/2)); axis image; axis off; colorbar;
-
-
+[head, hdr, img_scaled] = load_ismrmrd_ifft3d_reconstruction(filename);
 
 
 %% Get table_position_offset : really important ! get value of the "0" position of the table in our case (SIEMENS AREA).. to complete and confirm for other systems
 
 %need GlobalTablePosTra (table position offset) contained by siemens raw
 %data
-
-
 [~,GlobalTablePosTra] =  system(['grep -a "GlobalTablePosTra" ' filename_raw])
 GlobalTablePosTra = regexp(GlobalTablePosTra,'<ParamLong."GlobalTablePosTra">  { [+-]?\d* + }','Match')
 GlobalTablePosTra = regexp(GlobalTablePosTra,'[+-]?\d*','Match')
@@ -104,45 +83,30 @@ table_position_offset=str2num(cell2mat(GlobalTablePosTra{1,1}));
 %needs to be done for each image (here size(img_scaled) = 1 so we work only
 %on the first and only image of the dataset (in temporal dimension))
 
-h = create_nifti_parameters(head, hdr, table_position_offset);
+h = extract_ismrmrd_parameters_from_headers(head, hdr, table_position_offset);
 
-pf.lefthand = 0;
-
-
+pf.lefthand = 0; %to include in a function ?
 
 
 %% Get crop image, flip and rotationate to match with true Nifti image
-
-%get only first image (here its the only one)
-img=img_scaled{1};
-img = permute(img, [2 1 3]);
-
-%OK pour coronal, sagittal et transversal:
-img=flip(img,3);
-img=flip(img,2);
-img = rot90(rot90(img,1),1);
-
-% Plot the mid slice : uncomment to plot
-% figure
-% colormap gray
-% subplot(2,1,1);
-% imagesc(img(:,:,size(img,3)/2)); axis image; axis off; colorbar;
-
+img = flip_image(img_scaled{1});
 
 
 %% Convert and save our new image in Nifti format
 
 % create nii struct based on img
-nii = nii_tool('init', img); 
+nii_empty = nii_tool('init', img); 
 
 %in case there will be more that one temporal image in dataset :  h2 = h, with
 %h a structure of size size(img_scaled)
 %here, only one temporal image so h2{1} only
 
 h2{1}=h;
-[nii2, h3] = set_nii_hdr_manon(nii, h2, pf);
+[nii_filled, h3] = set_nii_hdr_manon(nii_empty, h2, pf);
 
+%to change ? particular case ?
 fmt = 1;
-
 rst3D = (isnumeric(fmt) && fmt>3) || (ischar(fmt) && ~isempty(regexpi(fmt, '3D')));
-nii_tool('save', nii2, [pathstr '/' name '_manon_modified_version.nii'], rst3D);
+
+
+nii_tool('save', nii_filled, [pathstr '/' name '_manon_modified_version.nii'], rst3D);
