@@ -1,4 +1,4 @@
-addpath('/home/manondesclides/Valery/Code_Matlab/')
+addpath('/home/manondesclides/Code/Valery/Code_Matlab/')
 
 
 %% CORONAL EXAMPLES
@@ -12,8 +12,8 @@ addpath('/home/manondesclides/Valery/Code_Matlab/')
 % true_filename = '../Dataset5/Nifti/16_16_gre3D_2.2_coronal_F2H_rot66.72_20200130142618.nii';
 % converted_filename = '../Dataset5/FID/meas_MID00045_FID13794_gre3D_2_2_coronal_F2H_rot66_72_ismrmrd_to_nifti_version.nii';
 %R2L with rotation
-% true_filename = '/home/manondesclides/Valery/Dataset5/Nifti/15_15_gre3D_2.2_coronal_R2L_rot32.02_20200130142618.nii';
-% converted_filename = '/home/manondesclides/Valery/Dataset5/FID/meas_MID00044_FID13793_gre3D_2_2_coronal_R2L_rot32_02_ismrmrd_to_nifti_version.nii';
+% true_filename = '/home/manondesclides/Code/Valery/Dataset5/Nifti/15_15_gre3D_2.2_coronal_R2L_rot32.02_20200130142618.nii';
+% converted_filename = '/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00044_FID13793_gre3D_2_2_coronal_R2L_rot32_02_ismrmrd_to_nifti_version.nii';
 
 
 %% TRANVERSAL EXAMPLES
@@ -24,11 +24,11 @@ addpath('/home/manondesclides/Valery/Code_Matlab/')
 % true_filename = '../Dataset5/Nifti/8_8_gre3D_2.2_tranversal_R2L_20200130142618.nii';
 % converted_filename = '../Dataset5/FID/meas_MID00034_FID13783_gre3D_2_2_tranversal_R2L_ismrmrd_to_nifti_version.nii';
 %A2P with rotation
-% true_filename = '/home/manondesclides/Valery/Dataset5/Nifti/11_11_gre3D_2.4_tranversal_A2P_rot11.14_20200130142618.nii';
-% converted_filename = '/home/manondesclides/Valery/Dataset5/FID/meas_MID00037_FID13786_gre3D_2_4_tranversal_A2P_rot11_14_ismrmrd_to_nifti_version.nii';
+% true_filename = '/home/manondesclides/Code/Valery/Dataset5/Nifti/11_11_gre3D_2.4_tranversal_A2P_rot11.14_20200130142618.nii';
+% converted_filename = '/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00037_FID13786_gre3D_2_4_tranversal_A2P_rot11_14_ismrmrd_to_nifti_version.nii';
 %R2L with rotation
-% true_filename = '/home/manondesclides/Valery/Dataset5/Nifti/12_12_gre3D_2.2_tranversal_R2L_rot99.69_20200130142618.nii';
-% converted_filename = '/home/manondesclides/Valery/Dataset5/FID/meas_MID00038_FID13787_gre3D_2_2_tranversal_R2L_rot99_69_ismrmrd_to_nifti_version.nii';
+% true_filename = '/home/manondesclides/Code/Valery/Dataset5/Nifti/12_12_gre3D_2.2_tranversal_R2L_rot99.69_20200130142618.nii';
+% converted_filename = '/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00038_FID13787_gre3D_2_2_tranversal_R2L_rot99_69_ismrmrd_to_nifti_version.nii';
 
 
 %% SAGITTAL EXAMPLES
@@ -42,8 +42,8 @@ addpath('/home/manondesclides/Valery/Code_Matlab/')
 % true_filename = '../Dataset5/Nifti/13_13_gre3D_2.4_sagittal_A2P_rot14.05_20200130142618.nii';
 % converted_filename = '../Dataset5/FID/meas_MID00041_FID13790_gre3D_2_4_sagittal_A2P_rot14_05_ismrmrd_to_nifti_version.nii';
 %H2F rot
-% true_filename = '/home/manondesclides/Valery/Dataset5/Nifti/14_14_gre3D_2.2_sagittal_H2F_rot101.38_20200130142618.nii';
-% converted_filename = '/home/manondesclides/Valery/Dataset5/FID/meas_MID00042_FID13791_gre3D_2_2_sagittal_H2F_rot101_38_ismrmrd_to_nifti_version.nii';
+% true_filename = '/home/manondesclides/Code/Valery/Dataset5/Nifti/14_14_gre3D_2.2_sagittal_H2F_rot101.38_20200130142618.nii';
+% converted_filename = '/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00042_FID13791_gre3D_2_2_sagittal_H2F_rot101_38_ismrmrd_to_nifti_version.nii';
 
 
 
