@@ -1,9 +1,8 @@
 %% Add path to needed librairies
 
 addpath('/usr/local/share/ismrmrd/matlab/')
-addpath('/home/manondesclides/Valery/Code_Matlab/ismrmrd_to_nifti')
-addpath('/home/manondesclides/Valery/Code_Matlab/ismrmrd_to_nifti/xiangruili-dicm2nii-b76a158')
-addpath('/home/manondesclides/Valery/Code_Matlab/ismrmrd_to_nifti/manon')
+addpath('/home/manondesclides/Code/Valery/Code_Matlab/ismrmrd_to_nifti')
+addpath('/home/manondesclides/Code/Valery/Code_Matlab/ismrmrd_to_nifti/xiangruili-dicm2nii-b76a158')
 clearvars
 
 
@@ -20,33 +19,33 @@ clearvars
 
 %CORONAL EXAMPLES :
 %R2L
-% filename='/home/manondesclides/Valery/Dataset5/FID/meas_MID00035_FID13784_gre3D_2_2_coronal_R2L.h5'
+% filename='/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00035_FID13784_gre3D_2_2_coronal_R2L.h5'
 %F2H
-%filename='/home/manondesclides/Valery/Dataset5/FID/meas_MID00036_FID13785_gre3D_2_2_coronal_F2H.h5'
+%filename='/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00036_FID13785_gre3D_2_2_coronal_F2H.h5'
 %F2H with rotation 
-% filename='/home/manondesclides/Valery/Dataset5/FID/meas_MID00045_FID13794_gre3D_2_2_coronal_F2H_rot66_72.h5'
+% filename='/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00045_FID13794_gre3D_2_2_coronal_F2H_rot66_72.h5'
 %R2L with rotation
-% filename='/home/manondesclides/Valery/Dataset5/FID/meas_MID00044_FID13793_gre3D_2_2_coronal_R2L_rot32_02.h5'
+% filename='/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00044_FID13793_gre3D_2_2_coronal_R2L_rot32_02.h5'
 
 % TRANVERSAL EXAMPLES : 
 %A2P
-%filename = '/home/manondesclides/Valery/Dataset5/FID/meas_MID00033_FID13782_gre3D_2_2_tranversal_A2P.h5'
+%filename = '/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00033_FID13782_gre3D_2_2_tranversal_A2P.h5'
 %R2L
-% filename = '/home/manondesclides/Valery/Dataset5/FID/meas_MID00034_FID13783_gre3D_2_2_tranversal_R2L.h5'
+% filename = '/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00034_FID13783_gre3D_2_2_tranversal_R2L.h5'
 %A2P with rotation
-%  filename = '/home/manondesclides/Valery/Dataset5/FID/meas_MID00037_FID13786_gre3D_2_4_tranversal_A2P_rot11_14.h5'
+%  filename = '/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00037_FID13786_gre3D_2_4_tranversal_A2P_rot11_14.h5'
 %R2L with rotation
-%  filename = '/home/manondesclides/Valery/Dataset5/FID/meas_MID00038_FID13787_gre3D_2_2_tranversal_R2L_rot99_69.h5'
+%  filename = '/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00038_FID13787_gre3D_2_2_tranversal_R2L_rot99_69.h5'
  
 % SAGITTAL EXAMPLES : 
 %A2P
-% filename = '/home/manondesclides/Valery/Dataset5/FID/meas_MID00046_FID13795_gre3D_2_4_sagittal_A2P.h5'
+% filename = '/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00046_FID13795_gre3D_2_4_sagittal_A2P.h5'
 %H2F
-%filename = '/home/manondesclides/Valery/Dataset5/FID/meas_MID00047_FID13796_gre3D_2_2_sagittal_H2F.h5'
+%filename = '/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00047_FID13796_gre3D_2_2_sagittal_H2F.h5'
 %A2P with rotation
-%  filename = '/home/manondesclides/Valery/Dataset5/FID/meas_MID00041_FID13790_gre3D_2_4_sagittal_A2P_rot14_05.h5'
+%  filename = '/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00041_FID13790_gre3D_2_4_sagittal_A2P_rot14_05.h5'
 %H2F with rotation
-% filename = '/home/manondesclides/Valery/Dataset5/FID/meas_MID00042_FID13791_gre3D_2_2_sagittal_H2F_rot101_38.h5'
+% filename = '/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00042_FID13791_gre3D_2_2_sagittal_H2F_rot101_38.h5'
 
 
 %filename_raw = '.dat'
