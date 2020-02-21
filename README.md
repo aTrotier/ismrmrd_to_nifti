@@ -2,6 +2,9 @@
 
 New beta version of ismrmrd_to_nifti
 
+## Data used for test :
+The dataset we worked on is available here : https://zenodo.org/record/3674622#.Xk031Y7Pw5k
+
 ## Usage
 
 This beta version is available in the "manon" folder.
