@@ -1,4 +1,4 @@
-function h = extract_ismrmrd_parameters_from_headers(head, hdr, table_position_offset)
+function h = extract_ismrmrd_parameters_from_headers(head, hdr)
 %create_nifti_parameters : function that returns a structure h which
 %contains parameters needed for conversion function
 
@@ -8,6 +8,14 @@ index=find(m~=0);
 first_index_ok=index(1);
 last_index_ok = index(end);
 
+%% find indice of GlobalTablePosTra fields
+
+idx_TablePos = find(strcmp({hdr.userParameters.userParameterLong.name}, 'GlobalTablePosTra')==1);
+if isempty(idx_TablePos)
+    warning('Missing GlobalTablePosTra parameters in the ismrmrd dataset. Check if you use the parameter maps in the folder');
+else
+    table_position_offset = hdr.userParameters.userParameterLong(idx_TablePos).value;
+end
 
 %% Create structure h
 h = struct('NumberOfTemporalPositions',1);
