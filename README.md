@@ -7,7 +7,6 @@ The dataset we worked on is available here : https://zenodo.org/record/3674622#.
 
 ## Usage
 
-This beta version is available in the "manon" folder.
 Her you will find :
 
 - *"main_conversion.m"* : main code to **run conversion** from ".dat"/".h5" to Nifti ".nii"
@@ -30,8 +29,8 @@ addpath('/home/path_to_ismrmrd_to_nifti/xiangruili-dicm2nii-b76a158')
 
 ```
 3)
-    ---> If you need to **convert your file to Nifti from .dat**, uncomment the part "%% IF conversion from .dat to .h5 needed (Export of MP2RAGE-CS_WIP siemens from : dat -> ismrmrd -> nifti)
-" and set the path *filename_raw* to your ".dat" file.
+    ---> If you need to **convert your file to Nifti from .dat**, uncomment the part "%% IF conversion from .dat to .h5 needed (Export from : dat -> ismrmrd -> nifti)"
+" and change the path to the parameter maps : IsmrmrdParameterMap_Siemens_Table.xml and IsmrmrdParameterMap_Siemens_Table.xsl
 
     ---> If you need to **convert your file to Nifti from .h5** uncomment the part "%% ELSE : Select .h5 file (need .dat too)" and set the path *filename* to your ".h5" file and the *filename_raw* to your ".dat" file.
 
@@ -53,7 +52,7 @@ if you want"
 ## Description 
 
 This new version includes :
-- a **'table_position_offset'** parameter which is important to convert well ismrmrd to nifti images (in case of SIEMENS images). This parameter was already in ismrmrd header as 'table_position_offset' but the value wasn't usable because it was not the absolute offset, but just the position of the table (need a pair of values : origin AND position to compute the offset). The origin value is stocked in Siemens RAW data and the absolute difference between origin and position too. We get this last value by making a grep in the raw data file associated with the '.h5' to convert. 
+- a **'table_position_offset'** parameter which is important to convert well ismrmrd to nifti images (in case of SIEMENS images). This parameter was already in ismrmrd header as 'table_position_offset' but the value wasn't usable because it was not the absolute offset, but just the position of the table (need a pair of values : origin AND position to compute the offset). The origin value is stocked in Siemens RAW data and the absolute difference between origin and position too. In the last version we get this value directly from the .dat file into the ismrmrd dataset using dedicated **parameter maps** for siemens_to_ismrmrd.
 This offset is added to the 'z' patient position coordinate.
 
 - little changes in the conversion formula : we hilighted issues on transformation matrix concerning the position of the image. Those little differences between the true Nifti image and the converted one were due to a bad way to deal with matrices dimensions. Indeed, it's necessary to substract 1 voxel dimension on x and y coordinates AND 1/2 slice dimension on z coordinate to center the image. 

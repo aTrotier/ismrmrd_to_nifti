@@ -6,16 +6,33 @@ addpath('/home/manondesclides/Code/Valery/Code_Matlab/ismrmrd_to_nifti/xiangruil
 clearvars
 
 
-%% IF conversion from .dat to .h5 needed (Export of MP2RAGE-CS_WIP siemens from : dat -> ismrmrd -> nifti)
+%% IF conversion from .dat to .h5 needed (Export from : dat -> ismrmrd -> nifti)
 
-% filename_raw ='/media/sylvain/rawData/Project-data/SIEMENS/MP2RAGE/data_santain/CS_MP2RAGE/meas_MID00221_FID97927_sparse_mp2rage_0p8iso_acc8p5.dat';
-% [pathstr, name, ext] = fileparts(filename_raw);
-% cmdStr=['siemens_to_ismrmrd -z 3 -f ' filename_raw ' -o ' pathstr '/' name '.h5']
-% system(cmdStr);
-% filename = [pathstr '/' name '.h5'];
+% you should use the dedicated parameter maps for the siemens_to_ismrmrd
+% conversion in order to have access to all the parameters used for nifti
+% reconstruction
+xmlFile = '/home/atrotier/GITHUB/ismrmrd_to_nifti/parameterMaps/IsmrmrdParameterMap_Siemens_Table.xml';
+xlsFile = '/home/atrotier/GITHUB/ismrmrd_to_nifti/parameterMaps/IsmrmrdParameterMap_Siemens_Table.xsl';
 
 
-%% ELSE : Select .h5 file (need .dat too)
+[filename_list, pathname] = uigetfile('*.dat','MultiSelect','on');
+
+idxFile = 1;
+if iscell(filename_list)
+    filename_tmp = filename_list{idxFile};
+else
+    filename_tmp = filename_list;
+end
+
+filename_raw = fullfile(pathname,filename_tmp);
+[pathstr, name, ext] = fileparts(filename_raw);
+% cmdStr=['siemens_to_ismrmrd -z 2 -f ' filename_raw ' -o ' pathstr '/' name '.h5'] % if my pull request is accepted
+cmdStr=['siemens_to_ismrmrd -z 2 --user-map ' xmlFile ' --user-stylesheet ' xlsFile ' -f ' filename_raw ' -o ' pathstr '/' name '.h5  '];
+system(cmdStr);
+filename = [pathstr '/' name '.h5'];
+
+
+%% ELSE : Select .h5 file (.dat is not required if you do the conversion with our parameter cards too)
 
 %CORONAL EXAMPLES :
 %R2L
@@ -47,10 +64,6 @@ clearvars
 %H2F with rotation
 % filename = '/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00042_FID13791_gre3D_2_2_sagittal_H2F_rot101_38.h5'
 
-
-%filename_raw = '.dat'
-
-
 %% Load selected file
 %get filename 
 [pathstr, name, ext] = fileparts(filename);
@@ -59,21 +72,23 @@ clearvars
 [head, hdr, img_scaled] = load_ismrmrd_ifft3d_reconstruction(filename);
 
 
-%% Get table_position_offset : really important ! get value of the "0" position of the table in our case (SIEMENS AREA).. to complete and confirm for other systems
+%% DEPRECATED : table position is stored in userParameters : table_position_offset = hdr.userParameters.userParameterLong(65).value
 
-%need GlobalTablePosTra (table position offset) contained by siemens raw
-%data
-[~,GlobalTablePosTra] =  system(['grep -a "GlobalTablePosTra" ' filename_raw])
-GlobalTablePosTra = regexp(GlobalTablePosTra,'<ParamLong."GlobalTablePosTra">  { [+-]?\d* + }','Match')
-GlobalTablePosTra = regexp(GlobalTablePosTra,'[+-]?\d*','Match')
+% Get table_position_offset : really important ! get value of the "0" position of the table in our case (SIEMENS AREA).. to complete and confirm for other systems
 
-table_position_offset=str2num(cell2mat(GlobalTablePosTra{1,1}));
+%need GlobalTablePosTra (table position offset) contained by siemens raw data
+
+% [~,GlobalTablePosTra] =  system(['grep -a "GlobalTablePosTra" ' filename_raw])
+% GlobalTablePosTra = regexp(GlobalTablePosTra,'<ParamLong."GlobalTablePosTra">  { [+-]?\d* + }','Match')
+% GlobalTablePosTra = regexp(GlobalTablePosTra,'[+-]?\d*','Match')
+% 
+% table_position_offset=str2num(cell2mat(GlobalTablePosTra{1,1}));
 
 %% Create parameters for set_nii_hdr_manon et xform_mat_manon
 %needs to be done for each image (here size(img_scaled) = 1 so we work only
 %on the first and only image of the dataset (in temporal dimension))
 
-h = extract_ismrmrd_parameters_from_headers(head, hdr, table_position_offset);
+h = extract_ismrmrd_parameters_from_headers(head, hdr);
 
 
 
