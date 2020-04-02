@@ -3,7 +3,7 @@ import ismrmrd
 import ismrmrd.xsd
 import numpy as np
 
-from ismrmrdtools import show, transform
+from ismrmrdtools import transform
 
 def load_ismrmrd_ifft3d_reconstruction(filename):
     """
@@ -35,7 +35,7 @@ def load_ismrmrd_ifft3d_reconstruction(filename):
     eNy = enc.encodedSpace.matrixSize.y
     eNz = enc.encodedSpace.matrixSize.z
     rNx = enc.reconSpace.matrixSize.x
-
+    rNy = enc.reconSpace.matrixSize.y
 
     # Number of Slices, Reps, Contrasts, etc.
     #We have to wrap the following in a if/else because a valid xml header may
@@ -101,7 +101,6 @@ def load_ismrmrd_ifft3d_reconstruction(filename):
             # need to use the [:] notation here to fill the data
             acq.data[:] = transform.transform_image_to_kspace(xline, dim=(1,), k_shape=(rNx,))
 
-
         # Stuff into the buffer
         rep = acq.idx.repetition
         contrast = acq.idx.contrast
@@ -111,7 +110,7 @@ def load_ismrmrd_ifft3d_reconstruction(filename):
         all_data[rep, contrast, slice, :, z, y, :] = acq.data
 
     # Reconstruct images
-    images = np.zeros((nreps, ncontrasts, nslices, eNz, eNy, rNx), dtype=np.float32)
+    images = np.zeros((nreps, ncontrasts, nslices, eNz, rNy, rNx), dtype=np.float32)
     img_scaled = []
     for rep in range(nreps):
         for contrast in range(ncontrasts):
@@ -123,6 +122,11 @@ def load_ismrmrd_ifft3d_reconstruction(filename):
                 else:
                     # 2D
                     im = transform.transform_kspace_to_image(all_data[rep, contrast, slice, :, 0, :, :], [2, 3])
+
+                if eNy != rNy:
+                    x0 = int((eNy - rNy) / 2)
+                    x1 = int((eNy - rNy) / 2 + rNy)
+                    im = im[:,:,x0:x1, :]
 
                 # Sum of squares
                 im = np.sqrt(np.sum(np.abs(im) ** 2, 0))

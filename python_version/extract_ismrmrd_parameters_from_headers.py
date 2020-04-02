@@ -35,15 +35,6 @@ def extract_ismrmrd_parameters_from_headers(head, hdr):
     if (hdr.encoding[0].reconSpace.matrixSize.z == 0):
         hdr.encoding[0].reconSpace.matrixSize.z = 1
 
-    #find indices of GlobalTableProsTra fields
-    idx_TablePosTra = [i for i in range(len(hdr.userParameters.userParameterLong)) if  hdr.userParameters.userParameterLong[i].name == 'GlobalTablePosTra']
-    if idx_TablePosTra == []:
-        print('Missing GlobalTablePosTra parameters in the ismrmrd dataset. Check if you use the parameter maps in the folder')
-        print("Exit with code 0.")
-        sys.exit(0)
-    else :
-        table_position_offset=int(hdr.userParameters.userParameterLong[idx_TablePosTra[0]].value_)
-
 
     #ImagePositionPatient of first slice (right corner position of first and last slice)
     #Attention peut-être que faut changer les +/-
@@ -60,7 +51,7 @@ def extract_ismrmrd_parameters_from_headers(head, hdr):
                             + rFOVx / 2 * head.read_dir[1] \
                             + rFOVy / 2 * head.phase_dir[1] \
                             + rFOVz / 2 * head.slice_dir[1]
-    corner_first_slice[2] = head.position[2] + table_position_offset\
+    corner_first_slice[2] = head.position[2] \
                             + rFOVx / 2 * head.read_dir[2] \
                             + rFOVy / 2 * head.phase_dir[2] \
                             + rFOVz / 2 * head.slice_dir[2]
@@ -75,7 +66,7 @@ def extract_ismrmrd_parameters_from_headers(head, hdr):
                            + rFOVx / 2 * head.read_dir[1] \
                            + rFOVy / 2 * head.phase_dir[1] \
                            - rFOVz / 2 * head.slice_dir[1]
-    corner_last_slice[2] = head.position[2] + table_position_offset\
+    corner_last_slice[2] = head.position[2] \
                            + rFOVx / 2 * head.read_dir[2] \
                            + rFOVy / 2 * head.phase_dir[2] \
                            - rFOVz / 2 * head.slice_dir[2]

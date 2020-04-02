@@ -4,7 +4,7 @@ fld = 'NumberOfTemporalPositions';
 if ~isfield(h{1}, fld) && nVol>1, h{1}.(fld) = nVol; end
 
 % Transformation matrix: most important feature for nii
-[ixyz, R, pixdim, xyz_unit] = xform_mat_manon(h{1}, dim); % R: dicom xform matrix
+[ixyz, R, pixdim, xyz_unit] = xform_mat(h{1}, dim); % R: dicom xform matrix
 
 R(1:2,:) = -R(1:2,:); % dicom LPS to nifti RAS, xform matrix before reorient
 
@@ -89,7 +89,6 @@ end
 [~, perm] = sort(ixyz); % may permute 3 dimensions in this order
 
 shift_vector = [1 1 0.5];
-
 if (strcmp(tryGetField(s, 'MRAcquisitionType', ''), '3D') || s.isDTI) && ...
         dim(3)>1 && (~isequal(perm, 1:3)) % skip if already XYZ order
     R(:, 1:3) = R(:, perm); % xform matrix after perm
@@ -226,7 +225,7 @@ elseif sclApplied && isfield(s, 'MRScaleSlope')
     nii.img = nii.img / slope;
 end
 
-% % if pf.scale_16bit && any(nii.hdr.datatype==[4 512]) % like dcm2niix
+% if pf.scale_16bit && any(nii.hdr.datatype==[4 512]) % like dcm2niix
 %     if nii.hdr.datatype == 4 % int16
 %         scale = floor(32000 / double(max(abs(nii.img(:)))));
 %     else % datatype==512 % uint16
@@ -234,8 +233,9 @@ end
 %     end
 %     nii.img = nii.img * scale;
 %     nii.hdr.scl_slope = nii.hdr.scl_slope / scale;
-% end
+%   
 h{1} = s;
+
 
 function [phPos, iPhase] = phaseDirection(s)
 phPos = []; iPhase = [];
@@ -338,7 +338,7 @@ if q(1)<0, q = -q; end % as MRICron
 
 
 %% Subfunction: get dicom xform matrix and related info
-function [ixyz, R, pixdim, xyz_unit] = xform_mat_manon(s, dim)
+function [ixyz, R, pixdim, xyz_unit] = xform_mat(s, dim)
 haveIOP = isfield(s, 'ImageOrientationPatient');
 if haveIOP, R = reshape(s.ImageOrientationPatient, 3, 2);
 else, R = [1 0 0; 0 1 0]';

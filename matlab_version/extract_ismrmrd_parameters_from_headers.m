@@ -1,4 +1,4 @@
-function h = extract_ismrmrd_parameters_from_headers(head, hdr)
+function h = extract_ismrmrd_parameters_from_headers(head, hdr, table_position_offset)
 %create_nifti_parameters : function that returns a structure h which
 %contains parameters needed for conversion function
 
@@ -8,14 +8,6 @@ index=find(m~=0);
 first_index_not_empty=index(1);
 last_index_not_empty = index(end);
 
-%% find indice of GlobalTablePosTra fields
-
-idx_TablePos = find(strcmp({hdr.userParameters.userParameterLong.name}, 'GlobalTablePosTra')==1);
-if isempty(idx_TablePos)
-    warning('Missing GlobalTablePosTra parameters in the ismrmrd dataset. Check if you use the parameter maps in the folder');
-else
-    table_position_offset = hdr.userParameters.userParameterLong(idx_TablePos).value;
-end
 
 %% Create structure h
 h = struct('NumberOfTemporalPositions',1);
@@ -41,28 +33,22 @@ h.PixelSpacing = [hdr.encoding.reconSpace.fieldOfView_mm.x / hdr.encoding.reconS
 % % Attention peut-être que faut changer les +/-
 % % en fonction de HFS dans : hdr.measurementInformation.patientPosition
 
-% Creates a directions matrix and print it ((
-directions = [head.read_dir(1,first_index_not_empty)  head.read_dir(2,first_index_not_empty)  head.read_dir(3,first_index_not_empty);
-              head.phase_dir(1,first_index_not_empty) head.phase_dir(2,first_index_not_empty) head.phase_dir(3,first_index_not_empty);
-              head.slice_dir(1,first_index_not_empty) head.slice_dir(2,first_index_not_empty) head.slice_dir(3,first_index_not_empty)]'
-          
-
 
 %Compute the corner position (ImagePositionPatient) of the first slice
 corner_first_slice(1)= head.position(1, first_index_not_empty)  ... 
     + (hdr.encoding.reconSpace.fieldOfView_mm.x / 2.0 ) * head.read_dir(1,first_index_not_empty) ...
     + (hdr.encoding.reconSpace.fieldOfView_mm.y / 2.0 ) * head.phase_dir(1,first_index_not_empty) ...
-    - (hdr.encoding.reconSpace.fieldOfView_mm.z / 2.0 ) * head.slice_dir(1,first_index_not_empty) ;
+    + (hdr.encoding.reconSpace.fieldOfView_mm.z / 2.0 ) * head.slice_dir(1,first_index_not_empty) ;
 
 corner_first_slice(2)=head.position(2, first_index_not_empty)   ... 
     + (hdr.encoding.reconSpace.fieldOfView_mm.x / 2.0) * head.read_dir(2,first_index_not_empty) ...
     + (hdr.encoding.reconSpace.fieldOfView_mm.y / 2.0 ) * head.phase_dir(2,first_index_not_empty) ...
-    - (hdr.encoding.reconSpace.fieldOfView_mm.z / 2.0) * head.slice_dir(2,first_index_not_empty) ;
+    + (hdr.encoding.reconSpace.fieldOfView_mm.z / 2.0) * head.slice_dir(2,first_index_not_empty) ;
    
 corner_first_slice(3)=head.position(3, first_index_not_empty) + table_position_offset  ...
     + (hdr.encoding.reconSpace.fieldOfView_mm.x / 2.0 ) * head.read_dir(3,first_index_not_empty) ...
     + (hdr.encoding.reconSpace.fieldOfView_mm.y / 2.0 ) * head.phase_dir(3,first_index_not_empty) ...
-    - (hdr.encoding.reconSpace.fieldOfView_mm.z / 2.0 ) * head.slice_dir(3,first_index_not_empty) ;
+    + (hdr.encoding.reconSpace.fieldOfView_mm.z / 2.0 ) * head.slice_dir(3,first_index_not_empty) ;
 
 h.ImagePositionPatient = corner_first_slice';
 
@@ -70,17 +56,17 @@ h.ImagePositionPatient = corner_first_slice';
 corner_last_slice(1)=head.position(1, first_index_not_empty)...
     + (hdr.encoding.reconSpace.fieldOfView_mm.x / 2.0 ) * head.read_dir(1,last_index_not_empty) ...
     + (hdr.encoding.reconSpace.fieldOfView_mm.y / 2.0 ) * head.phase_dir(1,last_index_not_empty) ...
-    + (hdr.encoding.reconSpace.fieldOfView_mm.z / 2.0 ) * head.slice_dir(1,last_index_not_empty) ;
+    - (hdr.encoding.reconSpace.fieldOfView_mm.z / 2.0 ) * head.slice_dir(1,last_index_not_empty) ;
 
 corner_last_slice(2)=head.position(2, first_index_not_empty) ... 
     + (hdr.encoding.reconSpace.fieldOfView_mm.x / 2.0 ) * head.read_dir(2,last_index_not_empty) ...
     + (hdr.encoding.reconSpace.fieldOfView_mm.y / 2.0 ) * head.phase_dir(2,last_index_not_empty) ...
-    + (hdr.encoding.reconSpace.fieldOfView_mm.z / 2.0 ) * head.slice_dir(2,last_index_not_empty) ;
+    - (hdr.encoding.reconSpace.fieldOfView_mm.z / 2.0 ) * head.slice_dir(2,last_index_not_empty) ;
 
-corner_last_slice(3)=head.position(3, first_index_not_empty) + table_position_offset ...
+corner_last_slice(3)=head.position(3, first_index_not_empty) +table_position_offset ...
     + (hdr.encoding.reconSpace.fieldOfView_mm.x / 2.0 ) * head.read_dir(3,last_index_not_empty) ...
     + (hdr.encoding.reconSpace.fieldOfView_mm.y / 2.0 ) * head.phase_dir(3,last_index_not_empty) ...
-    + (hdr.encoding.reconSpace.fieldOfView_mm.z / 2.0 ) * head.slice_dir(3,last_index_not_empty) ;
+    - (hdr.encoding.reconSpace.fieldOfView_mm.z / 2.0 ) * head.slice_dir(3,last_index_not_empty) ;
 
 h.LastFile.ImagePositionPatient = corner_last_slice';
 

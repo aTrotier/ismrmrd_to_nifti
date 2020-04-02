@@ -46,7 +46,7 @@ addpath('/home/manondesclides/Code/Valery/Code_Matlab/')
 % converted_filename = '/home/manondesclides/Code/Valery/Dataset5/FID/meas_MID00042_FID13791_gre3D_2_2_sagittal_H2F_rot101_38_ismrmrd_to_nifti_version.nii';
 
 
-
+true_filename = '/home/manondesclides/Data/Dataset7/Sheep_Ablation_2/10/10_10_CS_ANGIO_1.3ISO_20200214184232.nii'
 %% TRANSFORM MATRIX COMPARISON 
 %Load true data
 true_file = niftiread(true_filename);
