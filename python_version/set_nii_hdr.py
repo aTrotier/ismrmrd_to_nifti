@@ -61,6 +61,7 @@ def dcm2quat(R):
         q[0] = 0
     mx = np.amax(q)
     ind = np.where(q == mx)
+    ind=ind[0][0]
     mx = mx * 4
     if ind[0] == 0:
         q[1] = (R[2, 1] - R[1, 2]) / mx
@@ -434,7 +435,7 @@ def set_nii_hdr(nii, h, pf):
     r, sNorm = null(R0[:, (np.setdiff1d(np.arange(0, 3), iSL, assume_unique=True)).T].T)
     if np.sign(sNorm[ixyz[iSL]]) != np.sign(R[ixyz[iSL], iSL]):
         sNorm = -sNorm
-    shear = np.where((np.linalg.norm(R0[:, iSL[0]] - sNorm) > 0.01), 1, 0)
+ #   shear = np.where((np.linalg.norm(R0[:, iSL[0]] - sNorm) > 0.01), 1, 0)
     R0[:, iSL[0]] = sNorm
 
     # compute quaternion (qform)
@@ -447,15 +448,15 @@ def set_nii_hdr(nii, h, pf):
     hdr["quatern_c"] = q[2]
     hdr["quatern_d"] = q[3]
 
-    if shear:
-        hdr["hdrTilt"] = hdr  # copy all hdr for tilt version
-        hdr["qform_code"] = 0  # disable qform
-        gantry = tryGetField(s, 'GantryDetectorTilt', 0)
-        hdr["hdrTilt"]["pixdim"][iSL[0][0] + 1] = np.linalg.norm(R[0:3, iSL]) * np.cos(gantry * np.pi / 180)
-        R[0:3, iSL[0][0]] = sNorm * hdr["hdrTilt"]["pixdim"][iSL[0][0] + 1]
-        hdr["hdrTilt"]["srow_x"] = R[0, :]
-        hdr["hdrTilt"]["srow_y"] = R[1, :]
-        hdr["hdrTilt"]["srow_z"] = R[2, :]
+    # if shear:
+    #     hdr["hdrTilt"] = hdr  # copy all hdr for tilt version
+    #     hdr["qform_code"] = 0  # disable qform
+    #     gantry = tryGetField(s, 'GantryDetectorTilt', 0)
+    #     hdr["hdrTilt"]["pixdim"][iSL[0][0] + 1] = np.linalg.norm(R[0:3, iSL]) * np.cos(gantry * np.pi / 180)
+    #     R[0:3, iSL[0][0]] = sNorm * hdr["hdrTilt"]["pixdim"][iSL[0][0] + 1]
+    #     hdr["hdrTilt"]["srow_x"] = R[0, :]
+    #     hdr["hdrTilt"]["srow_y"] = R[1, :]
+    #     hdr["hdrTilt"]["srow_z"] = R[2, :]
 
     #store some possibly useful info in descrip and other text fields
     str = tryGetField(s, 'ImageComments', '')
