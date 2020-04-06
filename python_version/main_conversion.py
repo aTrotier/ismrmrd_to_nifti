@@ -43,7 +43,7 @@ def main(argv):
     if outputfile == '' :
         output_path = os.path.join(pathstr +'/'+ name +'_ismrmrd_to_nifti_version_python.nii')
     else :
-        output_path = outputfile
+        output_path = outputfile 
     print('Input file : ', filename)
     print('Output file : ', output_path)
 
@@ -63,7 +63,6 @@ def main(argv):
     h2.append(h)
 
     ## Compute nifti parameters
-    hdr=nii_empty.header
     [nii_filled, h3] = tools.set_nii_hdr(nii_empty, h2, pf)
 
     ## Save image in nifti format
