@@ -63,19 +63,19 @@ def dcm2quat(R):
     ind = np.where(q == mx)
     ind=ind[0][0]
     mx = mx * 4
-    if ind[0] == 0:
+    if ind == 0:
         q[1] = (R[2, 1] - R[1, 2]) / mx
         q[2] = (R[0, 2] - R[2, 0]) / mx
         q[3] = (R[1, 0] - R[0, 1]) / mx
-    elif ind[0] == 1:
+    elif ind == 1:
         q[0] = (R[2, 1] - R[1, 2]) / mx
         q[2] = (R[0, 1] + R[1, 0]) / mx
         q[3] = (R[2, 0] + R[0, 2]) / mx
-    elif ind[0] == 2:
+    elif ind == 2:
         q[0] = (R[0, 2] - R[2, 0]) / mx
         q[1] = (R[0, 1] + R[1, 0]) / mx
         q[3] = (R[1, 2] + R[2, 1]) / mx
-    elif ind[0] == 3:
+    elif ind == 3:
         q[0] = (R[1, 0] - R[0, 1]) / mx
         q[1] = (R[2, 0] + R[0, 2]) / mx
         q[2] = (R[1, 2] + R[2, 1]) / mx
