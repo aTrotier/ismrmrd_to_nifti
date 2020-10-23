@@ -1,7 +1,7 @@
-#!/usr/bin/python3.6
+#!/usr/bin/env python3
 
 import sys
-sys.path.append('/mnt/Lourd/Work/Code/Valery/Code_Matlab/ismrmrd_to_nifti')
+sys.path.append('/opt/src')
 
 from python_version import set_nii_hdr as tools
 from python_version import load_ismrmrd_ifft3d_reconstruction as h5reco
