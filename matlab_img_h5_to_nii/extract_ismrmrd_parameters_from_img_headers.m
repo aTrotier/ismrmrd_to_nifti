@@ -4,19 +4,21 @@ function h = extract_ismrmrd_parameters_from_img_headers(headtmp)
 
 %% recreate head and hdr
 first_index_not_empty = 1;
-head.phase_dir(:,1) = headtmp.phase_dir;
-head.read_dir(:,1) = headtmp.read_dir;
-head.slice_dir(:,1) = headtmp.slice_dir;
+last_index_not_empty = 1;%size(headtmp.phase_dir,2);
 
-hdr.encoding.reconSpace.fieldOfView_mm.x = double(headtmp.field_of_view(1));
-hdr.encoding.reconSpace.fieldOfView_mm.y = double(headtmp.field_of_view(2));
-hdr.encoding.reconSpace.fieldOfView_mm.z = double(headtmp.field_of_view(3));
+head.phase_dir = headtmp.phase_dir(:,first_index_not_empty);
+head.read_dir = headtmp.read_dir(:,first_index_not_empty);
+head.slice_dir = headtmp.slice_dir(:,first_index_not_empty);
 
-hdr.encoding.reconSpace.matrixSize.x = double(headtmp.matrix_size(1));
-hdr.encoding.reconSpace.matrixSize.y = double(headtmp.matrix_size(2));
-hdr.encoding.reconSpace.matrixSize.z = double(headtmp.matrix_size(3));
+hdr.encoding.reconSpace.fieldOfView_mm.x = double(headtmp.field_of_view(1,first_index_not_empty));
+hdr.encoding.reconSpace.fieldOfView_mm.y = double(headtmp.field_of_view(2,first_index_not_empty));
+hdr.encoding.reconSpace.fieldOfView_mm.z = double(headtmp.field_of_view(3,first_index_not_empty));
 
-head.position(:,1) = headtmp.position;
+hdr.encoding.reconSpace.matrixSize.x = double(headtmp.matrix_size(1,first_index_not_empty));
+hdr.encoding.reconSpace.matrixSize.y = double(headtmp.matrix_size(2,first_index_not_empty));
+hdr.encoding.reconSpace.matrixSize.z = double(headtmp.matrix_size(3,first_index_not_empty));
+
+head.position = headtmp.position;
 
 
 %% Create structure h
@@ -63,7 +65,7 @@ corner_first_slice(3)=head.position(3, first_index_not_empty)  ...
 h.ImagePositionPatient = corner_first_slice';
 
 %Compute the corner position (ImagePositionPatient) of the last slice
-last_index_not_empty = 1;
+
 corner_last_slice(1)=head.position(1, first_index_not_empty)...
     + (hdr.encoding.reconSpace.fieldOfView_mm.x / 2.0 ) * head.read_dir(1,last_index_not_empty) ...
     + (hdr.encoding.reconSpace.fieldOfView_mm.y / 2.0 ) * head.phase_dir(1,last_index_not_empty) ...

@@ -61,7 +61,7 @@ for n_img = 1:length(img)
     
     % Save image in nifti format
     if strcmp(output_path,'')
-        nii_tool('save', nii_filled, [pathstr '/' name '_index' num2str(head{n_img}.image_index) '_series' num2str(head{n_img}.image_series_index) '.nii'], rst3D);
+        nii_tool('save', nii_filled, [pathstr '/' name '_index' num2str(head{n_img}.image_index(1)) '_series' num2str(head{n_img}.image_series_index(1)) '.nii'], rst3D);
     else
         nii_tool('save', nii_filled, output_path, rst3D);
     end
