@@ -4,6 +4,7 @@ function [img,head] = ismrmrd_img_to_nifti(output_path)
 
 addpath('/usr/local/share/ismrmrd/matlab/')
 addpath('../../ismrmrd_to_nifti')
+addpath('../../ismrmrd_to_nifti/+ismrmrd_to_nifti')
 addpath('../../ismrmrd_to_nifti/xiangruili-dicm2nii-b76a158')
 clearvars
 
@@ -27,7 +28,7 @@ struct.path = filename;
 if strcmp(ext, '.h5')
     %load .h5 file and return dataset header, ismrmrd header and reconstructed
     %images
-    [img,head] = ismrmrd_read_img(struct);
+    [img,head] = ismrmrd_to_nifti.ismrmrd_read_img(struct);
 else
     error("not a valid .h5 file");
 end
@@ -36,9 +37,9 @@ for n_img = 1:length(img)
     % Create parameters for set_nii_hdr et xform_mat
     % needs to be done for each image (here size(img_scaled) = 1 so we work only
     % on the first and only image of the dataset (in temporal dimension))
-    h = extract_ismrmrd_parameters_from_img_headers(head{n_img});
+    h = ismrmrd_to_nifti.extract_ismrmrd_parameters_from_img_headers(head{n_img});
     % Get crop image, flip and rotationate to match with true Nifti image
-    img_for_nii = flip_image(img{n_img});
+    img_for_nii = ismrmrd_to_nifti.flip_image(img{n_img});
     
     
     % Create nii struct based on img
@@ -52,7 +53,7 @@ for n_img = 1:length(img)
     pf.lefthand = 0; %to include in a function ?
     
     
-    [nii_filled, h3] = set_nii_hdr(nii_empty, h2, pf);
+    [nii_filled, h3] = ismrmrd_to_nifti.set_nii_hdr(nii_empty, h2, pf);
     
     fmt = 1;
     
