@@ -59,7 +59,7 @@ end
 h = extract_ismrmrd_parameters_from_headers(head, hdr);
 
 % Get crop image, flip and rotationate to match with true Nifti image
-img = flip_image(img_scaled{1});
+img = ismrmrd_to_nifti.flip_image(img_scaled{1});
 
 % Create nii struct based on img
 nii_empty = nii_tool('init', img); 
@@ -69,7 +69,7 @@ nii_empty = nii_tool('init', img);
 % here, only one temporal image so h2{1} only
 h2{1}=h;
 pf.lefthand = 0; %to include in a function ?
-[nii_filled, h3] = set_nii_hdr(nii_empty, h2, pf);
+[nii_filled, h3] = ismrmrd_to_nifti.set_nii_hdr(nii_empty, h2, pf);
 
 fmt = 1;
 
